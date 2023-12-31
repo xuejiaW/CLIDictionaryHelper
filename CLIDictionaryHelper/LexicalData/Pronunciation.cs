@@ -2,6 +2,12 @@
 
 public struct Pronunciation
 {
-    public string mp3Url;
     public string phonetic;
+    public string audioUrl;
+
+    public Pronunciation(string phonetic, string audioUrl)
+    {
+        this.phonetic = phonetic;
+        this.audioUrl = audioUrl;
+    }
 }

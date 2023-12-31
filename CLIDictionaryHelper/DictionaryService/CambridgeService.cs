@@ -1,13 +1,16 @@
-﻿using HtmlAgilityPack;
+﻿using System.Diagnostics;
+using HtmlAgilityPack;
 
 namespace CLIDictionaryHelper;
 
 public class CambridgeService : IDictionaryService
 {
+    private const string k_CambridgeQueryUrl = $"{k_CambridgeUrl}/search/english-chinese-simplified/direct/?q=";
+    private const string k_CambridgeUrl = "https://dictionary.cambridge.org";
+
     public async Task<HtmlDocument> GetQueryResult(string query)
     {
-        string cambridgeUrl = "https://dictionary.cambridge.org/search/english-chinese-simplified/direct/?q=";
-        string response = await new HttpClient().GetStringAsync($"{cambridgeUrl}{query}");
+        string response = await new HttpClient().GetStringAsync($"{k_CambridgeQueryUrl}{query}");
 
         var doc = new HtmlDocument();
         doc.LoadHtml(response);
@@ -30,6 +33,19 @@ public class CambridgeService : IDictionaryService
             definition.explanation = new Translation(entry.GetSubDivNodeText("def ddef_d db"),
                                                      entry.GetSubSpanNodeText("trans dtrans dtrans-se  break-cj"));
 
+            HtmlNodeCollection phonetics = entry.SelectNodes(".//span[contains(@class, 'pron dpron')]");
+            HtmlNodeCollection audioUrls = entry.SelectNodes(".//source[@type='audio/mpeg']");
+
+            Debug.Assert(phonetics.Count == audioUrls.Count);
+            for (int i = 0; i < phonetics.Count; i++)
+            {
+                string phonetic = phonetics[i].GetNodeText();
+                string audioUrl = $"{k_CambridgeUrl}{audioUrls[i].GetAttributeValue("src", "")}";
+                definition.pronunciations.Add(new Pronunciation(phonetic, audioUrl));
+            }
+
+            Console.WriteLine($"sss definition.pronunciations count is {definition.pronunciations.Count}");
+
             HtmlNodeCollection? exampleNodes = entry.SelectNodes(".//div[@class='examp dexamp']");
             exampleNodes?.ToList().ForEach(node =>
             {
@@ -40,7 +56,6 @@ public class CambridgeService : IDictionaryService
 
             wordDefinition.definitions.Add(definition);
         });
-
         return wordDefinition;
     }
 

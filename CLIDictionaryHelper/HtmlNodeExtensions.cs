@@ -13,6 +13,6 @@ public static class HtmlNodeExtensions
 
     public static string GetSubSpanNodeText(this HtmlNode node, string className)
     {
-        return node.SelectSingleNode($".//span[@class='{className}']").GetNodeText();
+        return node.SelectSingleNode($".//span[contains(@class, '{className}')]").GetNodeText();
     }
 }

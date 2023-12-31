@@ -23,6 +23,8 @@ public static class Printer
             lines.Add("------------------------------------");
             lines.Add($"{definition.query}");
             lines.Add($"<{definition.partOfSpeech}>");
+            lines.Add($"UK: {definition.pronunciations[0].phonetic}, US: {definition.pronunciations[1].phonetic}");
+            lines.Add($"UK: {definition.pronunciations[0].audioUrl}, US: {definition.pronunciations[1].audioUrl}");
             lines.Add("Definition:");
             lines.Add($"\t {definition.explanation.originText}");
             lines.Add($"\t {definition.explanation.translatedText}");
