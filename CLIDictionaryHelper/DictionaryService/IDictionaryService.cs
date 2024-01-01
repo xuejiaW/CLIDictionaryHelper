@@ -6,6 +6,6 @@ namespace CLIDictionaryHelper;
 public interface IDictionaryService
 {
     Task<HtmlDocument> GetQueryResult(string query);
-    Task<Definition> GetWordDefinition(string word);
-    Task<Definition> GetPhraseDefinition(string phrase);
+    Task<Definition?> GetWordDefinition(string word);
+    Task<Definition?> GetPhraseDefinition(string phrase);
 }

@@ -18,17 +18,21 @@ public class CambridgeService : IDictionaryService
         return doc;
     }
 
-    public async Task<Definition> GetWordDefinition(string word)
+    public async Task<Definition?> GetWordDefinition(string word)
     {
         HtmlDocument doc = await GetQueryResult(word);
 
         var wordDefinition = new Definition();
 
-        HtmlNodeCollection phonetics = doc.DocumentNode.SelectNodes(".//span[contains(@class, 'pron dpron')]");
+        string definitionsXPath = "//div[contains(@class, 'entry-body')]/*[contains(@class, 'entry-body__el')]";
+        string actualWord = doc.DocumentNode.GetSubSpanNodeText("hw dhw");
+        if (string.IsNullOrEmpty(actualWord)) return null;
+        HtmlNodeCollection? entries = doc.DocumentNode.SelectNodes(definitionsXPath);
+        FillDefinitions(wordDefinition.definitions, entries, actualWord);
 
+        HtmlNodeCollection phonetics = doc.DocumentNode.SelectNodes(".//span[contains(@class, 'pron dpron')]");
         HtmlNodeCollection audioUrls = doc.DocumentNode.SelectNodes(".//source[@type='audio/mpeg']");
 
-        Debug.Assert(audioUrls.Count >= 2 && phonetics.Count >= 2);
         for (int i = 0; i < 2; i++)
         {
             string phonetic = phonetics[i].GetNodeText();
@@ -36,14 +40,10 @@ public class CambridgeService : IDictionaryService
             wordDefinition.pronunciations.Add(new Pronunciation(phonetic, audioUrl));
         }
 
-        string definitionsXPath = "//div[contains(@class, 'entry-body')]/*[contains(@class, 'entry-body__el')]";
-        string actualWord = doc.DocumentNode.GetSubSpanNodeText("hw dhw");
-        HtmlNodeCollection? entries = doc.DocumentNode.SelectNodes(definitionsXPath);
-        FillDefinitions(wordDefinition.definitions, entries, actualWord);
         return wordDefinition;
     }
 
-    public async Task<Definition> GetPhraseDefinition(string phrase)
+    public async Task<Definition?> GetPhraseDefinition(string phrase)
     {
         HtmlDocument doc = await GetQueryResult(phrase);
 
@@ -51,7 +51,8 @@ public class CambridgeService : IDictionaryService
 
         string definitionsXPath = "//div[contains(@class, 'def-block ddef_block')]";
         HtmlNodeCollection? definitions = doc.DocumentNode.SelectNodes(definitionsXPath);
-        string actualPhrase = doc.DocumentNode.SelectSingleNode("//div[@class='di-title']/h2/b").GetNodeText();
+        string actualPhrase = doc.DocumentNode.SelectSingleNode("//div[@class='di-title']/h2/b")?.GetNodeText() ?? "";
+        if (string.IsNullOrEmpty(actualPhrase)) return null;
         FillDefinitions(phraseDefinition.definitions, definitions, actualPhrase);
 
         // As the cambridge do not have audio for phase, we get the audio from youdao
