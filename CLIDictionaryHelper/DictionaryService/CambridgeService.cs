@@ -18,11 +18,11 @@ public class CambridgeService : IDictionaryService
         return doc;
     }
 
-    public async Task<WordDefinition> GetWordDefinition(string word)
+    public async Task<Definition> GetWordDefinition(string word)
     {
         HtmlDocument doc = await GetQueryResult(word);
 
-        var wordDefinition = new WordDefinition();
+        var wordDefinition = new Definition();
 
         HtmlNodeCollection phonetics = doc.DocumentNode.SelectNodes(".//span[contains(@class, 'pron dpron')]");
 
@@ -36,13 +36,39 @@ public class CambridgeService : IDictionaryService
             wordDefinition.pronunciations.Add(new Pronunciation(phonetic, audioUrl));
         }
 
-
         string definitionsXPath = "//div[contains(@class, 'entry-body')]/*[contains(@class, 'entry-body__el')]";
+        string actualWord = doc.DocumentNode.GetSubSpanNodeText("hw dhw");
         HtmlNodeCollection? entries = doc.DocumentNode.SelectNodes(definitionsXPath);
-        entries?.ToList().ForEach(entry =>
+        FillDefinitions(wordDefinition.definitions, entries, actualWord);
+        return wordDefinition;
+    }
+
+    public async Task<Definition> GetPhraseDefinition(string phrase)
+    {
+        HtmlDocument doc = await GetQueryResult(phrase);
+
+        var phraseDefinition = new Definition();
+
+        string definitionsXPath = "//div[contains(@class, 'def-block ddef_block')]";
+        HtmlNodeCollection? definitions = doc.DocumentNode.SelectNodes(definitionsXPath);
+        string actualPhrase = doc.DocumentNode.SelectSingleNode("//div[@class='di-title']/h2/b").GetNodeText();
+        FillDefinitions(phraseDefinition.definitions, definitions, actualPhrase);
+
+        // As the cambridge do not have audio for phase, we get the audio from youdao
+        string audioUrl = $"https://dict.youdao.com/dictvoice?audio={Uri.EscapeDataString(actualPhrase)}&type=1";
+        phraseDefinition.pronunciations.Add(new Pronunciation("", audioUrl));
+
+
+        return phraseDefinition;
+    }
+
+    private void FillDefinitions(List<Meaning> definitions, HtmlNodeCollection? definitionsNodes, string word)
+    {
+        definitionsNodes?.ToList().ForEach(entry =>
         {
-            var definition = new Definition();
+            var definition = new Meaning();
             definition.word = entry.GetSubSpanNodeText("hw dhw");
+            if (string.IsNullOrEmpty(definition.word)) definition.word = word;
             definition.partOfSpeech = entry.GetSubSpanNodeText("pos dpos");
             definition.explanation = new Translation(entry.GetSubDivNodeText("def ddef_d db"),
                                                      entry.GetSubSpanNodeText("trans dtrans dtrans-se  break-cj"));
@@ -56,10 +82,7 @@ public class CambridgeService : IDictionaryService
                 definition.examples.Add(example);
             });
 
-            wordDefinition.definitions.Add(definition);
+            definitions.Add(definition);
         });
-        return wordDefinition;
     }
-
-    public Task<PhraseDefinition> GetPhraseDefinition(string phrase) { throw new NotImplementedException(); }
 }

@@ -2,22 +2,17 @@
 
 public struct Definition
 {
-    public string word;
-    public string partOfSpeech;
-    public Translation explanation;
-    public List<Translation> examples;
+    public List<Meaning> definitions;
+    public List<Pronunciation> pronunciations;
 
     public Definition()
     {
-        word = "";
-        partOfSpeech = "";
-        examples = new List<Translation>();
+        definitions = new List<Meaning>();
+        pronunciations = new List<Pronunciation>();
     }
 
     public bool IsComplete()
     {
-        return word != "" && partOfSpeech != "" &&
-               examples.Count != 0 &&
-               explanation.IsComplete();
+        return definitions.Count != 0 && definitions.TrueForAll(definition => definition.IsComplete());
     }
 }

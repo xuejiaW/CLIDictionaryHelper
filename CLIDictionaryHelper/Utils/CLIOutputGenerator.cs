@@ -10,16 +10,17 @@ public static class CLIOutputGenerator
     private const string k_Reset = "\u001b[0m";
 
 
-    public static IEnumerable<string> From(WordDefinition word)
+    public static IEnumerable<string> From(Definition word)
     {
         var lines = new List<string>();
-        lines.Add($"UK: {word.pronunciations[0].phonetic}, US: {word.pronunciations[1].phonetic}");
+        if (word.pronunciations.Count >= 2)
+            lines.Add($"UK: {word.pronunciations[0].phonetic}, US: {word.pronunciations[1].phonetic}");
 
         word.definitions.ForEach(definition =>
         {
             lines.Add("------------------------------------");
             lines.Add($"{definition.word}");
-            lines.Add($"<{definition.partOfSpeech}>");
+            if (!string.IsNullOrEmpty(definition.partOfSpeech)) lines.Add($"<{definition.partOfSpeech}>");
             lines.Add($"{k_Yellow}Definition{k_Reset}:");
             lines.Add($"\t {definition.explanation.originText}");
             lines.Add($"\t {k_Bold}{definition.explanation.translatedText}{k_Reset}");

@@ -7,11 +7,11 @@ namespace CLIDictionaryHelper;
 
 public static class AnkiService
 {
-    public static async Task AddComplexCardToAnkiAsync(WordDefinition word, string deckName, string modelName)
+    public static async Task AddComplexCardToAnkiAsync(Definition definition, string deckName, string modelName)
     {
         using var httpClient = new HttpClient();
 
-        var note = new AnkiNote("单词 CLI", "单词", word);
+        var note = new AnkiNote("单词 CLI", "单词", definition);
         var request = new
         {
             action = "addNote",

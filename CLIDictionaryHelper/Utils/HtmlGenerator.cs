@@ -8,7 +8,7 @@ public static class HtmlGenerator
     private static string? s_StyleStr = null;
     private static string styleStr => s_StyleStr ??= ResourcesLoader.ReadFile("AnkiStyle.css");
 
-    public static string From(WordDefinition word)
+    public static string From(Definition word)
     {
         var sb = new StringBuilder();
         sb.AppendLine("<style>");

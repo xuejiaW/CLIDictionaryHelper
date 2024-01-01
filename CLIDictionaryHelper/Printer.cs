@@ -16,9 +16,9 @@ public static class Printer
         Console.InputEncoding = Encoding.UTF8;
     }
 
-    public static async Task Print(WordDefinition wordDefinition)
+    public static async Task Print(Definition definition)
     {
-        IEnumerable<string> lines = CLIOutputGenerator.From(wordDefinition);
+        IEnumerable<string> lines = CLIOutputGenerator.From(definition);
         await Print(lines);
     }
 
