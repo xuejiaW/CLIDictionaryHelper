@@ -16,14 +16,14 @@ public static class Printer
         Console.InputEncoding = Encoding.UTF8;
     }
 
-    public static void Print(WordDefinition wordDefinition)
+    public static async Task Print(WordDefinition wordDefinition)
     {
         IEnumerable<string> lines = CLIOutputGenerator.From(wordDefinition);
-        Print(lines);
+        await Print(lines);
     }
 
 
-    private static void Print(IEnumerable<string> lines)
+    private static Task Print(IEnumerable<string> lines)
     {
         if (!s_IsInitialized) Initialize();
 
@@ -42,5 +42,6 @@ public static class Printer
         }
 
         bufferLines.ForEach(Console.WriteLine);
+        return Task.CompletedTask;
     }
 }

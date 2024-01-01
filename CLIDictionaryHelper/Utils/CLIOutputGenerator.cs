@@ -13,7 +13,6 @@ public static class CLIOutputGenerator
     public static IEnumerable<string> From(WordDefinition word)
     {
         var lines = new List<string>();
-        lines.Add("Query: " + word.query);
         word.definitions.ForEach(definition =>
         {
             lines.Add("------------------------------------");

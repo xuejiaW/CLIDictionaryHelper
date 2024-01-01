@@ -12,15 +12,16 @@ internal static class Program
             Console.WriteLine("-------------------------------------------");
             Console.WriteLine("Please enter a word (or type '!q' to quit):");
             string? input = Console.ReadLine();
-        
+
             if (string.IsNullOrEmpty(input)) continue;
             if (input.ToLower() == "!q") break;
-        
+
             try
             {
                 WordDefinition wordDefinition = await new CambridgeService().GetWordDefinition(input);
-                await AnkiService.AddComplexCardToAnkiAsync(wordDefinition, "单词 CLI", "单词");
-                Printer.Print(wordDefinition);
+                Task ankiTask = AnkiService.AddComplexCardToAnkiAsync(wordDefinition, "单词 CLI", "单词");
+                Task printTask = Printer.Print(wordDefinition);
+                await Task.WhenAll(ankiTask, printTask);
             } catch (Exception e)
             {
                 Console.WriteLine("An Error occurred:");
