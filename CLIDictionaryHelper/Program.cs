@@ -29,9 +29,10 @@ internal static class Program
                     continue;
                 }
 
-                Task ankiTask = AnkiService.AddComplexCardToAnkiAsync(definition.Value, "单词 CLI", "单词");
-                Task printTask = Printer.Print(definition.Value);
-                await Task.WhenAll(ankiTask, printTask);
+                await Printer.Print(definition.Value);
+                Console.WriteLine("Save to anki? 'y' for save, Others for not");
+                string? save = Console.ReadLine();
+                if (save == "y") await AnkiService.AddComplexCardToAnkiAsync(definition.Value, "单词 CLI", "单词");
             } catch (Exception e)
             {
                 Console.WriteLine("An Error occurred:");
