@@ -23,9 +23,9 @@ public struct AnkiNote
         this.modelName = modelName;
         fields = new Dictionary<string, string>();
         fields.Add("单词", word.definitions[0].word);
-        fields.Add("音标", word.definitions[0].pronunciations[0].phonetic);
+        fields.Add("音标", word.pronunciations[0].phonetic);
         fields.Add("释义", HtmlGenerator.From(word));
-        var audio = new Audio(word.definitions[0].pronunciations[0].audioUrl,
+        var audio = new Audio(word.pronunciations[0].audioUrl,
                               $"CDH-{word.definitions[0].word + ".mp3"}", "发音");
         audios = new List<Audio> {audio};
         options = new Options {allowDuplicate = false};

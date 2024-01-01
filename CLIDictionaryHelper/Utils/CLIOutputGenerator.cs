@@ -8,17 +8,18 @@ public static class CLIOutputGenerator
     private const string k_Red = "\u001b[31m";
     private const string k_Yellow = "\u001b[33m";
     private const string k_Reset = "\u001b[0m";
-    
+
 
     public static IEnumerable<string> From(WordDefinition word)
     {
         var lines = new List<string>();
+        lines.Add($"UK: {word.pronunciations[0].phonetic}, US: {word.pronunciations[1].phonetic}");
+
         word.definitions.ForEach(definition =>
         {
             lines.Add("------------------------------------");
             lines.Add($"{definition.word}");
             lines.Add($"<{definition.partOfSpeech}>");
-            lines.Add($"UK: {definition.pronunciations[0].phonetic}, US: {definition.pronunciations[1].phonetic}");
             lines.Add($"{k_Yellow}Definition{k_Reset}:");
             lines.Add($"\t {definition.explanation.originText}");
             lines.Add($"\t {k_Bold}{definition.explanation.translatedText}{k_Reset}");

@@ -24,6 +24,19 @@ public class CambridgeService : IDictionaryService
 
         var wordDefinition = new WordDefinition();
 
+        HtmlNodeCollection phonetics = doc.DocumentNode.SelectNodes(".//span[contains(@class, 'pron dpron')]");
+
+        HtmlNodeCollection audioUrls = doc.DocumentNode.SelectNodes(".//source[@type='audio/mpeg']");
+
+        Debug.Assert(audioUrls.Count >= 2 && phonetics.Count >= 2);
+        for (int i = 0; i < 2; i++)
+        {
+            string phonetic = phonetics[i].GetNodeText();
+            string audioUrl = $"{k_CambridgeUrl}{audioUrls[i].GetAttributeValue("src", "")}";
+            wordDefinition.pronunciations.Add(new Pronunciation(phonetic, audioUrl));
+        }
+
+
         string definitionsXPath = "//div[contains(@class, 'entry-body')]/*[contains(@class, 'entry-body__el')]";
         HtmlNodeCollection? entries = doc.DocumentNode.SelectNodes(definitionsXPath);
         entries?.ToList().ForEach(entry =>
@@ -34,16 +47,6 @@ public class CambridgeService : IDictionaryService
             definition.explanation = new Translation(entry.GetSubDivNodeText("def ddef_d db"),
                                                      entry.GetSubSpanNodeText("trans dtrans dtrans-se  break-cj"));
 
-            HtmlNodeCollection phonetics = entry.SelectNodes(".//span[contains(@class, 'pron dpron')]");
-            HtmlNodeCollection audioUrls = entry.SelectNodes(".//source[@type='audio/mpeg']");
-
-            Debug.Assert(phonetics.Count == audioUrls.Count);
-            for (int i = 0; i < phonetics.Count; i++)
-            {
-                string phonetic = phonetics[i].GetNodeText();
-                string audioUrl = $"{k_CambridgeUrl}{audioUrls[i].GetAttributeValue("src", "")}";
-                definition.pronunciations.Add(new Pronunciation(phonetic, audioUrl));
-            }
 
             HtmlNodeCollection? exampleNodes = entry.SelectNodes(".//div[@class='examp dexamp']");
             exampleNodes?.ToList().ForEach(node =>

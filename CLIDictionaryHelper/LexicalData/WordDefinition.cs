@@ -3,8 +3,13 @@
 public struct WordDefinition
 {
     public List<Definition> definitions;
+    public List<Pronunciation> pronunciations;
 
-    public WordDefinition() { definitions = new List<Definition>(); }
+    public WordDefinition()
+    {
+        definitions = new List<Definition>();
+        pronunciations = new List<Pronunciation>();
+    }
 
     public bool IsComplete()
     {
