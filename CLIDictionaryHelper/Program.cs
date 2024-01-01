@@ -1,4 +1,6 @@
-﻿namespace CLIDictionaryHelper;
+﻿using CLIDictionaryHelper.LexicalData;
+
+namespace CLIDictionaryHelper;
 
 internal static class Program
 {

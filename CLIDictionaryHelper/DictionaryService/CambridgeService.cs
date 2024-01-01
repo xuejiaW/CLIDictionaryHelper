@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using CLIDictionaryHelper.LexicalData;
 using HtmlAgilityPack;
 
 namespace CLIDictionaryHelper;

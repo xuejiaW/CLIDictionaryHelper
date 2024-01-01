@@ -1,4 +1,5 @@
-﻿using HtmlAgilityPack;
+﻿using CLIDictionaryHelper.LexicalData;
+using HtmlAgilityPack;
 
 namespace CLIDictionaryHelper;
 

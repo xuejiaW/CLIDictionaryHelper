@@ -1,4 +1,4 @@
-﻿namespace CLIDictionaryHelper;
+﻿namespace CLIDictionaryHelper.LexicalData;
 
 public struct Pronunciation
 {
