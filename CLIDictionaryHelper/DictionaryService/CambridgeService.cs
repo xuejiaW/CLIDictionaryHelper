@@ -45,8 +45,6 @@ public class CambridgeService : IDictionaryService
                 definition.pronunciations.Add(new Pronunciation(phonetic, audioUrl));
             }
 
-            Console.WriteLine($"sss definition.pronunciations count is {definition.pronunciations.Count}");
-
             HtmlNodeCollection? exampleNodes = entry.SelectNodes(".//div[@class='examp dexamp']");
             exampleNodes?.ToList().ForEach(node =>
             {

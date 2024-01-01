@@ -19,9 +19,6 @@ public static class AnkiService
             @params = new {note}
         };
 
-        string json = JsonConvert.SerializeObject(request);
-        Console.WriteLine(json);
-
         var content = new StringContent(JsonConvert.SerializeObject(request), Encoding.UTF8, "application/json");
 
         HttpResponseMessage response = await httpClient.PostAsync("http://localhost:8765", content);

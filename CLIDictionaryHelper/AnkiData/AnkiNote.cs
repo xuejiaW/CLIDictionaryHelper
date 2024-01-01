@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using Newtonsoft.Json;
 using CLIDictionaryHelper.LexicalData;
+using CLIDictionaryHelper.Utils;
 
 namespace CLIDictionaryHelper.AnkiData;
 
@@ -23,11 +24,11 @@ public struct AnkiNote
         fields = new Dictionary<string, string>();
         fields.Add("单词", word.definitions[0].query);
         fields.Add("音标", word.definitions[0].pronunciations[0].phonetic);
-        fields.Add("释义", word.definitions[0].explanation.translatedText);
+        fields.Add("释义", HtmlGenerator.From(word));
         var audio = new Audio(word.definitions[0].pronunciations[0].audioUrl,
-                              $"CDH{word.definitions[0].query + ".mp3"}", "发音");
+                              $"CDH-{word.definitions[0].query + ".mp3"}", "发音");
         audios = new List<Audio> {audio};
-        options = new Options {allowDuplicate = true};
+        options = new Options {allowDuplicate = false};
         tags = new List<string> {"CLI"};
     }
 }
