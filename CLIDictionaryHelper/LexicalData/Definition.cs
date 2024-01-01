@@ -10,9 +10,16 @@ public struct Definition
 
     public Definition()
     {
-        word= "";
+        word = "";
         partOfSpeech = "";
         examples = new List<Translation>();
         pronunciations = new List<Pronunciation>();
+    }
+
+    public bool IsComplete()
+    {
+        return word != "" && partOfSpeech != "" &&
+               examples.Count != 0 && pronunciations.Count != 0 &&
+               explanation.IsComplete();
     }
 }

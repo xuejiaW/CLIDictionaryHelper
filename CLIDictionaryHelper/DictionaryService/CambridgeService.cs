@@ -22,7 +22,7 @@ public class CambridgeService : IDictionaryService
     {
         HtmlDocument doc = await GetQueryResult(word);
 
-        var wordDefinition = new WordDefinition(word);
+        var wordDefinition = new WordDefinition();
 
         string definitionsXPath = "//div[contains(@class, 'entry-body')]/*[contains(@class, 'entry-body__el')]";
         HtmlNodeCollection? entries = doc.DocumentNode.SelectNodes(definitionsXPath);

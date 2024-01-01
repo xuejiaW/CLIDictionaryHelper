@@ -10,4 +10,6 @@ public struct Translation
         this.originText = originText;
         this.translatedText = translatedText;
     }
+
+    public bool IsComplete() { return originText != "" && translatedText != ""; }
 }

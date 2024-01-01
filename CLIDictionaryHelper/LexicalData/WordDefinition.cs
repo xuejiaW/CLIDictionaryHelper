@@ -2,12 +2,12 @@
 
 public struct WordDefinition
 {
-    public string query;
     public List<Definition> definitions;
 
-    public WordDefinition(string query)
+    public WordDefinition() { definitions = new List<Definition>(); }
+
+    public bool IsComplete()
     {
-        this.query = query;
-        definitions = new List<Definition>();
+        return definitions.Count != 0 && definitions.TrueForAll(definition => definition.IsComplete());
     }
 }
