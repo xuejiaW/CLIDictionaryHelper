@@ -2,12 +2,12 @@
 
 public struct WordDefinition
 {
-    public string word;
+    public string query;
     public List<Definition> definitions;
 
-    public WordDefinition(string word)
+    public WordDefinition(string query)
     {
-        this.word = word;
+        this.query = query;
         definitions = new List<Definition>();
     }
 }

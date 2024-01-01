@@ -29,7 +29,7 @@ public class CambridgeService : IDictionaryService
         entries?.ToList().ForEach(entry =>
         {
             var definition = new Definition();
-            definition.query = entry.GetSubSpanNodeText("hw dhw");
+            definition.word = entry.GetSubSpanNodeText("hw dhw");
             definition.partOfSpeech = entry.GetSubSpanNodeText("pos dpos");
             definition.explanation = new Translation(entry.GetSubDivNodeText("def ddef_d db"),
                                                      entry.GetSubSpanNodeText("trans dtrans dtrans-se  break-cj"));

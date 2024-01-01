@@ -2,7 +2,7 @@
 
 public struct Definition
 {
-    public string query;
+    public string word;
     public string partOfSpeech;
     public Translation explanation;
     public List<Pronunciation> pronunciations;
@@ -10,7 +10,7 @@ public struct Definition
 
     public Definition()
     {
-        query= "";
+        word= "";
         partOfSpeech = "";
         examples = new List<Translation>();
         pronunciations = new List<Pronunciation>();

@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using CLIDictionaryHelper.LexicalData;
+using CLIDictionaryHelper.Utils;
 
 namespace CLIDictionaryHelper;
 
@@ -17,25 +18,7 @@ public static class Printer
 
     public static void Print(WordDefinition wordDefinition)
     {
-        var lines = new List<string>();
-        lines.Add("Word: " + wordDefinition.word);
-        wordDefinition.definitions.ForEach(definition =>
-        {
-            lines.Add("------------------------------------");
-            lines.Add($"{definition.query}");
-            lines.Add($"<{definition.partOfSpeech}>");
-            lines.Add($"UK: {definition.pronunciations[0].phonetic}, US: {definition.pronunciations[1].phonetic}");
-            lines.Add("Definition:");
-            lines.Add($"\t {definition.explanation.originText}");
-            lines.Add($"\t {definition.explanation.translatedText}");
-            if (definition.examples.Count != 0) lines.Add("Examples:");
-            definition.examples.ForEach(example =>
-            {
-                lines.Add($"\t {example.originText}");
-                lines.Add($"\t {example.translatedText}");
-            });
-        });
-
+        IEnumerable<string> lines = CLIOutputGenerator.From(wordDefinition);
         Print(lines);
     }
 
